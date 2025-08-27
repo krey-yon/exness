@@ -16,10 +16,19 @@ await client.connect();
 
 let buffer: any[] = [];
 let index = 0;
+const BATCH_SIZE = 500;
 
-async function grabData(rawdata: any) {
+function grabData(rawdata: any) {
   const data = handlewsdata(rawdata);
   buffer.push(data);
+
+  if (buffer.length >= BATCH_SIZE) {
+    flushBuffer().catch(console.error);
+  }
+}
+
+async function flushBuffer() {
+  if (buffer.length === 0) return;
   const values = buffer
     .map(
       (t, i) =>
@@ -32,29 +41,32 @@ async function grabData(rawdata: any) {
     t.buyingPrice,
   ]);
   console.log({
-    "values": values,
-    "params": params
-  })
+    values: values,
+    params: params,
+  });
   await client.query(
     `INSERT INTO market_ticks (time, selling_price, buying_price) VALUES ${values}`,
     params
   );
+  buffer = [];
   index++;
 }
+
+setInterval(() => {
+  flushBuffer().catch(console.error);
+}, 2000);
 
 socket.addEventListener("message", (msg) => {
   try {
     // const data = handlewsdata(JSON.parse(msg.data));
     // console.log(data);
-    setInterval(() => {
-      grabData(JSON.parse(msg.data));
-      console.log(`batch ${index} inserted`);
-    }, 1000);
-    buffer = [];
-
+    // setInterval(() => {
+    //   grabData(JSON.parse(msg.data));
+    //   console.log(`batch ${index} inserted`);
+    // }, 4000);
+    grabData(JSON.parse(msg.data))
     const data = handlePublishOrderBookData(JSON.parse(msg.data));
     redis.publish("btcusdtorderbook", JSON.stringify(data));
-
   } catch (error) {
     console.log(error);
   }
