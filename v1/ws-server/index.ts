@@ -1,17 +1,16 @@
 import { WebSocketServer, WebSocket as WSWebSocket, type RawData } from "ws";
 import redis from "./utils/redisClient";
-import { sendOrderBookData } from "./utils/sendOrderbook";
 
 const PORT = 8080;
 const wss = new WebSocketServer({ port: PORT });
 
-// await redis.subscribe("btcusdtorderbook");
+await redis.subscribe("marketdata");
 
 const clients = new Set<WSWebSocket>();
 
 wss.on("connection", (socket: WSWebSocket) => {
   console.log("Client connected");
-
+  
   clients.add(socket);
   socket.on("message", (raw: RawData) => {
     const data = JSON.parse(raw.toString());
@@ -57,8 +56,8 @@ redis.on("message", (channel, message) => {
 
 (async () => {
   try {
-    await redis.subscribe("btcusdtorderbook");
-    console.log("Subscribed to Redis channel: btcusdtorderbook");
+    await redis.subscribe("marketdata");
+    console.log("Subscribed to Redis channel: marketdata");
   } catch (err) {
     console.error("Redis subscribe error:", err);
   }

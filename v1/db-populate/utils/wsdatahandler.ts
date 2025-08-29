@@ -1,15 +1,11 @@
 export const handlewsdata = (msg: any) => {
   try {
-    const bestBid = msg.b[0];
-    const bestAsk = msg.a[0];
-
-    const bestBidPrice = parseFloat(bestBid[0]);
-    const bestAskPrice = parseFloat(bestAsk[0]);
+    const current_price = msg.data.p;
+    const current_timestamp = msg.data.E;
 
     const data = {
-      sellingPrice: bestAskPrice,
-      buyingPrice: bestBidPrice,
-      timestamp: Date.now(),
+      price: parseFloat(current_price),
+      timestamp: current_timestamp,
     };
 
     return data;

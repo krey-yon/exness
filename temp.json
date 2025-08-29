@@ -1,0 +1,14 @@
+{
+    "ethusdt": {
+        "timesteamp": 0,
+        "base_price": 0
+    },
+    "solusdt": {
+        "timesteamp": 0,
+        "base_price": 0
+    },
+    "btcusdt": {
+        "timesteamp": 0,
+        "base_price": 0
+    }
+}
