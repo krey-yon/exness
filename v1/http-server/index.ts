@@ -40,7 +40,7 @@ app.get("/", (req: Request, res: Response) => {
 app.get("/1min", get1Min);
 app.get("/5min", get5Min);
 app.get("/15min", get15Min);
-app.get("/30hr", get30Min);
+app.get("/30min", get30Min);
 app.get("/1hr", get1Hr);
 
 app.post("/signup", createUser);
