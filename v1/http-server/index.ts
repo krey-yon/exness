@@ -22,7 +22,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-const port = 3000;
+const port = 8000;
 
 redis.on("message", (channel, message) => {
   // console.log(`Redis [${channel}]: ${message}`);

@@ -66,11 +66,16 @@ export const userPortfolio = (req: Request, res: Response) => {
     (sum, pos) => sum + pos.quantity,
     0
   );
+  const procceds = userPositions?.Short.reduce(
+    (total, trade) => total + trade.proceeds!,
+    0
+  );
   const globalPrice = globalMarketState.price;
   const assestsPrice = totalQuantity! * globalPrice;
   res.json({
     userBalance,
     assestsPrice,
+    procceds,
   });
 };
 
